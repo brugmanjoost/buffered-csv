@@ -1,3 +1,6 @@
+#Mercurial
+.hg
+
 # Logs
 logs
 *.log
