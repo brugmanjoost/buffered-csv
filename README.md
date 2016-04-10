@@ -1,10 +1,9 @@
 buffered-csv
 ============
 
-1. [Introduction](#Introduction)
-2. [Installation](#Installation)
-2. [How It Works](#how-it-works)
-3. [API Documentation](#api-documentation)
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+3. [Usage](#usage)
 
 ## Introduction
 Generation of csv files is straightforward. Often this involves appending the generated csv file line by line as the data is generated. Some use cases benefit from storing the data in memory until a threshold is reached upon which all lines in memory are appended to the file at once. This module does just that:
@@ -22,8 +21,35 @@ $ npm install buffered-csv
 
 ## Usage
 
+### Minimal
+The following displays the bare minimum usage using all defaults and no buffering. Lines are written to file line-by-line. *Name* and *PlaceOfBirth* are identified and saved as headers on the first line.
+
 ```javascript
 const csv = require('buffered-csv');
+var file = new csv.File();
+file.open('celebrities.csv');
+file.add({
+  Name: 'Albert Einstein',
+  PlaceOfBirth: 'Ulm',
+});
+file.add({
+  Name: 'Galileo Galilei',
+  Expertise: 'Gravity',
+});
+file.close();
+```
+
+
+
+
+
+
+```javascript
+
+
+
+
+
 
 var file = new csv.File({
   'encoding':       'utf8',
