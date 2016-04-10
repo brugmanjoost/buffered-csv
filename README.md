@@ -22,7 +22,7 @@ $ npm install buffered-csv
 ## Usage
 
 ### Minimal
-The following displays the bare minimum usage using all defaults and no buffering. Lines are written to file line-by-line. *Name* and *PlaceOfBirth* are identified and saved as headers on the first line.
+The following displays the bare minimum usage using all defaults and no buffering. Lines are written to file line-by-line.
 
 ```javascript
 const csv = require('buffered-csv');
@@ -30,7 +30,7 @@ var file = new csv.File();
 file.open('celebrities.csv');
 file.add({
   Name: 'Albert Einstein',
-  PlaceOfBirth: 'Ulm',
+  Expertise: 'Relativity',
 });
 file.add({
   Name: 'Galileo Galilei',
@@ -38,6 +38,43 @@ file.add({
 });
 file.close();
 ```
+
+### Buffered output
+Turning on buffering only requires passing flushing parameters to the constructor, like so:
+```javascript
+var file = new csv.File({
+  'flushInterval':  5000,
+  'flushLines':     3
+});
+```
+This flushes data from memory to file:
+- every 5 seconds.
+- or as soon as the buffer contains three lines.
+- or as soon as file.close() is called.
+
+### All options
+The following is a full list of all options that may be passed to the constructor:
+
+|option|description|
+|---------------|---------------------------------------------------------|
+|encoding       |Defaults to 'utf-8'. Specified encoding for the output file.       |
+|delimeter      |Defaults to ','|
+|quote          |Defaults to '"'|
+|escape         |Defaults to '\\'|
+|nullValue      |Defaults to 'NULL'|
+|eol            |Defaults to the system default.|
+|headers        |Defaults to true.|
+|overwrite      |Defaults to true.|
+|flushInterval  |Defaults to 0.|
+|flushLines     |Defaults to 0.|
+|fields         |Defaults to {}|
+
+
+
+
+
+
+
 
 
 
