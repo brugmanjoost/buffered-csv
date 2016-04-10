@@ -29,7 +29,7 @@ var file = new csv.File({
   'encoding':       'utf8',
   'delimeter':      ',',
   'quote':          '"',
-  'escape':         '\',
+  'escape':         '\\',
   'nullValue':      'NULL',
   'eol':            require('os').EOL,
   'headers':        true,
