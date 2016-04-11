@@ -41,20 +41,20 @@ The following displays the bare minimum usage using all defaults and no bufferin
 ```javascript
 const csv = require('buffered-csv');
 var file = new csv.File({
-	path:           'celebrities.csv'
+    path: 'celebrities.csv'
 });
 file.add({
-  Name: 'Albert Einstein',
-  Expertise: 'Relativity'
+    Name: 'Albert Einstein',
+    Expertise: 'Relativity'
 });
 file.add({
-  Name: 'Galileo Galilei',
-  Expertise: 'Gravity',
-  Birthyear: 154
+    Name: 'Galileo Galilei',
+    Expertise: 'Gravity',
+    Birthyear: 154
 });
 file.add({
-  Name: 'Shen Kuo',
-  Expertise: 'Astronomy',
+    Name: 'Shen Kuo',
+    Expertise: 'Astronomy',
 });
 file.complete();
 ```
@@ -63,9 +63,9 @@ file.complete();
 Turning on buffering only requires passing flushing parameters to the constructor, like so:
 ```javascript
 var file = new csv.File({
-	path:           'celebrities.csv',
-    flushInterval:  5000,
-    flushLines:     50
+    path: 'celebrities.csv',
+    flushInterval: 5000,
+    flushLines: 50
 });
 ```
 This flushes data from memory to file:
@@ -73,7 +73,7 @@ This flushes data from memory to file:
 - or as soon as the buffer contains 50 lines.
 - or as soon as file.close() is called.
 
-In our [minimal usage](#minimal) example we only add three lines, less than the specified flushLines of 50. We also add them well within 5.000ms. If we used these settings in the example, the data would be written to file no earlier then when file.complete() is called.
+In our [minimal usage](#minimal) example we only add three lines, less than the specified flushLines of 50. We also add them well within 5000ms. If we used these settings in the example, the data would be written to file no earlier then when file.complete() is called.
 
 ### Dynamic filenames
 
@@ -81,12 +81,11 @@ The location of the output file is given through the *path* option and may be sp
 
 ```javascript
 var file = new csv.File({
-	path:           function() {
-		return 'celebrities_' + (new Date()).getTime() + '.csv';
-	},
-    flushInterval:  5000,
-    flushLines:     50
-										    
+    path: function() {
+        return 'celebrities_' + (new Date()).getTime() + '.csv';
+    },
+    flushInterval: 5000,
+    flushLines: 50
 });
 ```
 
@@ -138,17 +137,16 @@ Prior specification of fields solves the drawbacks of autodetect at the expense 
 
 ```javascript
 var file = new csv.File({
-	path: 'celebrities.csv'
-	fields: {
-        Expertise: {
-            type: 'string'
-        },
-        Name: {
-            type: 'string'
-        },
-        Birthyear: {
-            type: 'number'
-        }   
+    path: 'celebrities.csv'
+    fields: {
+    Expertise: {
+        type: 'string'
+    },
+    Name: {
+        type: 'string'
+    },
+    Birthyear: {
+        type: 'number'
     }
 });
 ```
