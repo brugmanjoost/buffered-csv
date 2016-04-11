@@ -139,14 +139,15 @@ Prior specification of fields solves the drawbacks of autodetect at the expense 
 var file = new csv.File({
     path: 'celebrities.csv'
     fields: {
-    Expertise: {
-        type: 'string'
-    },
-    Name: {
-        type: 'string'
-    },
-    Birthyear: {
-        type: 'number'
+        Expertise: {
+            type: 'string'
+        },
+        Name: {
+            type: 'string'
+        },
+        Birthyear: {
+            type: 'number'
+        }
     }
 });
 ```
