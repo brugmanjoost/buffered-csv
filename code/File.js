@@ -41,7 +41,7 @@ var convertors = {
 var File = module.exports = function(options) {
 	EventEmitter.call(this);
 	_getOptions.call(this, options);
-	_(this).open = false;
+	_open.call(this);
 }
 util.inherits(File, EventEmitter);
 
@@ -81,6 +81,7 @@ var _getOptions = function(options) {
 	this.fields			= _getOne('fields',			{});
 	this.flushInterval	= _getOne('flushInterval',	0);
 	this.flushLines		= _getOne('flushLines',		0);
+	this.path			= _getOne('path');
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,9 +110,9 @@ var _updateCurrentFields = function(data) {
 
 	var names = Object.keys(data);
 	names.forEach(function(name) {
-		if(_(_that).currentFields[name] !== undefined)
+		if(_(_that).fields[name] !== undefined)
 			return;
-		_(_that).currentFields[name] = {
+		_(_that).fields[name] = {
 			type: 'string'
 		}
 	});
@@ -138,7 +139,7 @@ var _buildDataset = function(data) {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	_updateCurrentFields.call(this, data);
 	var dataset = [];
-	Object.keys(_(this).currentFields).forEach(function(name) {
+	Object.keys(_(this).fields).forEach(function(name) {
 		dataset.push(data[name]);
 	});
 	return dataset;
@@ -152,7 +153,7 @@ var _buildDataset = function(data) {
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var _generateCsvHeaders = function() {
-	return Object.keys(_(this).currentFields).map(function(value) {
+	return Object.keys(_(this).fields).map(function(value) {
 		return convertors.string.call(this, value);
 	}, this).join(this.delimeter) + this.eol
 }
@@ -165,16 +166,19 @@ var _generateCsvHeaders = function() {
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var _generateCsvData = function() {
-	var headerIndices = Object.keys(_(this).currentFields);
+	var headerIndices = Object.keys(_(this).fields);
 	return _(this).buffer.map(function(lineData) {
-		return lineData.map(function(value, index) {
-			return value === undefined
+		var line = lineData.map(function(value, index) {
+			return ((value === undefined) || (value === null)
 				? this.nullValue
-				: convertors[headerIndices[index] === undefined
-								? 'string'
-								: _(this).currentFields[headerIndices[index]].type
-							].call(this, value);
-		}, this).join(this.delimeter) + this.eol;
+				: headerIndices[index] === undefined
+					? 'string'
+					: _(this).fields[headerIndices[index]].type
+					].call(this, value);
+		}, this);
+		while(line.length < headerIndices.length)
+			line.push(this.nullValue);
+		return line.join(this.delimeter) + this.eol;
 	}, this).join('');
 }
 
@@ -185,9 +189,7 @@ var _generateCsvData = function() {
 // Description:
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-File.prototype.open = function(path) {
-	_requireState.call(this, STATE_CLOSED);
-
+var _open = function(path) {
 	var _that = this;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +198,6 @@ File.prototype.open = function(path) {
 	this.path				= path;
 	_(this).lastPath		= null;
 	_(this).buffer			= [];
-	_(this).currentFields	= JSON.parse(JSON.stringify(this.fields));	// We create a copy to work with for this file.
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Start timer for interval based flushing
@@ -214,12 +215,12 @@ File.prototype.open = function(path) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Function:	close
+// Function:	complete
 //
 // Description:
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-File.prototype.close = function() {
+File.prototype.complete = function() {
 	_requireState.call(this, STATE_OPEN);
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +298,7 @@ File.prototype.flush = function() {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Generate data output
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	var csv = ((this.headers && (_(this).lastPath != path)) ? _generateCsvHeaders.call(this) : '') + _generateCsvData.call(this);
+	var csv = ((this.headers && (_(this).lastPath != path) /* TODO: && (this.overwrite || file does not exist) */) ? _generateCsvHeaders.call(this) : '') + _generateCsvData.call(this);
 	_(this).buffer = [];
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
