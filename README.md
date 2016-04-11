@@ -2,21 +2,21 @@
 
 1. [Introduction](#introduction)
 2. [Installation](#installation)
-3. [Usage](#usage)
-3.1 [Minimal](#minimal) 
-3.2 [Buffering output](#buffering-output)
-3.3 [Dynamic filenames](#dynamic-filenames)
-3.4 [All options](#all-options)
-4. [Field handling](#field-handling)
-4.1 [Autodetect](#autodetect)
-4.2 [Prior specification](#prior-specification)
-5. [API](#api)
-5.1 [Class: buffered-csv.File](#class-buffered-csv-file)
-&nbsp;&nbsp;&nbsp;&nbsp;5.1.1 [Event: 'data'](#event-data)
-&nbsp;&nbsp;&nbsp;&nbsp;5.1.2 [Event: 'error'](#event-error)
-&nbsp;&nbsp;&nbsp;&nbsp;5.1.3 [file.add(data)](#fileadddata)
-&nbsp;&nbsp;&nbsp;&nbsp;5.1.4 [file.complete()](#filecomplete)
-&nbsp;&nbsp;&nbsp;&nbsp;5.1.5 [file.flush()](#fileflush)
+3. [Usage](#usage)<br />
+3.1 [Minimal](#minimal)<br />
+3.2 [Buffering output](#buffering-output)<br />
+3.3 [Dynamic filenames](#dynamic-filenames)<br />
+3.4 [All options](#all-options)<br />
+4. [Field handling](#field-handling)<br />
+4.1 [Autodetect](#autodetect)<br />
+4.2 [Prior specification](#prior-specification)<br />
+5. [API](#api)<br />
+5.1 [Class: buffered-csv.File](#class-buffered-csvfile)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;5.1.1 [Event: 'data'](#event-data)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;5.1.2 [Event: 'error'](#event-error)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;5.1.3 [file.add(data)](#fileadddata)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;5.1.4 [file.complete()](#filecomplete)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;5.1.5 [file.flush()](#fileflush)<br />
 6. [To do](#to-do)
 
 ## Introduction
@@ -70,7 +70,7 @@ var file = new csv.File({
 ```
 This flushes data from memory to file:
 - every 5000 milliseconds.
-- or as soon as the buffer contains fifty lines.
+- or as soon as the buffer contains 50 lines.
 - or as soon as file.close() is called.
 
 In our [minimal usage](#minimal) example we only add three lines, less than the specified flushLines of 50. We also add them well within 5.000ms. If we used these settings in the example, the data would be written to file no earlier then when file.complete() is called.
@@ -114,7 +114,7 @@ The following is a full list of all options that may be passed to the constructo
 
 ## Field handling
 
-buffered-csv tracks field order and field typing across all writes and all files. If data is added as an Array buffered-csv will always assume all entries in the array match up with any previously established field order. If data is added as a key/value map then buffered-csv will ensure fields will always be sent to file in the same order.
+buffered-csv tracks field order and field typing across all writes and all files. If data is added as an array buffered-csv will always assume all entries in the array match up with any previously established field order. If data is added as a key/value map then buffered-csv will ensure fields will always be sent to file in the same order.
 
 ## Autodetect
 If data is added as a key/value map previously unknown fields will automatically be detected and assumed to be string (quoted) types. This works well for many simple csv scenario's but there are drawbacks:
@@ -123,11 +123,12 @@ In our [minimal usage](#minimal) example a Birthyear...
 * ... is not specified for Albert Einstein. His csv line will have two fields.
 * ... is specified for Galileo Galilei. His csv line will have three fields.
 * ... is not specified for Shen Kuo. His csv line will have three fields with a *nullValue* for *Birthyear.*
+
 Without buffering data for Albert Einstein is sent to file immediately, which requires immmediate generation of a header line based on fields known so far. This excludes the *Birthyear* field which is only introduced later.
 
 In our [buffering output](#buffering-output) example data is only sent to file after Galileo Galilei has been added to the buffer. As a consequence...
 * ... the header line will include the *Birthyear* field.
-* ... Albert Einstein will include a *nullValue* field.
+* ... Albert Einstein's csv line will have  three fields with a nullValue for Birthyear.
 
 With dynamic filenames field information is maintained across all files. If during the 5th write on the 3rd file a field is added, it will show up in the headers of the 6th file and any subsequent files. It will not show in the headers of files 1 through 2. It will also not show in the headers of file 3 (it would have to be detected on the 1st write of file 3).
 
@@ -137,7 +138,7 @@ Prior specification of fields solves the drawbacks of autodetect at the expense 
 
 ```javascript
 var file = new csv.File({
-	path:           'celebrities.csv'
+	path: 'celebrities.csv'
 	fields: {
         Expertise: {
             type: 'string'
@@ -152,7 +153,7 @@ var file = new csv.File({
 });
 ```
 
-In thise case *Birthyear* will show up in all headerlines in all files. Additionally this specifies the field type, currently 'string' (quoted) or 'number' (non-quoted). Finally, this also sets the field order so that *Expertise* will be the first field listed on each line.
+In this case *Birthyear* will show up in all headerlines in all files. Additionally this method specifies the field type, currently either 'string' (quoted) or 'number' (non-quoted). Finally, this also sets the field order so that *Expertise* will be the first field listed on each line.
 
 Using pior specification does not disable autodetect and does not enable an error mechanism if unkown field names are added.
 
@@ -182,7 +183,7 @@ Adds a line of data to the csv file. The line is added to the buffer initially a
 
 If *data* is an array then the data is interpreted as order-first. Array items are interpreted as fields according to their position in the array. This influences their representation in the file (e.g. quoted or not).
 
-If *data* is a key/value map then the data is interpreted as name-first. Each key is interpreted as a header name. Data is sent to the buffer with a field order that matches any earlier established order of fields. Previously unseen keys are autodiscovered as headers.
+If *data* is a key/value map then the data is interpreted as name-first. Each key is interpreted as a field name. Data is sent to the buffer with a field order that matches any earlier established order of fields. Previously unseen keys are autodiscovered as headers.
 
 #### file.complete() 
 
@@ -196,7 +197,7 @@ Explicitly flushes the buffer to file.
 There are some items left to enhance buffered-csv, namely:
 
  - **Custom field support:** buffered-csv internally supports fields of any type through a mapping called *convertors*. Currently *string* and *number* are the only ones implemented where string is quoted and number is not. It would be chique to expose an API to allow adding custom items to this list, e.g. to convert a *Date* object to a YYYY-MM-DD representation.
- - **Timeout flush: ** Initiate a timeout once the first row enters the buffer. A flush is then initiated when the timeout completes, regardless of buffer size. If a new row enters the buffer after this the cycle repeats. This is an enhanced version of Interval flush that maximizes the amount of data written in a single flush.
+ - **Timeout flush:** Initiate a timeout once the first row enters the buffer. A flush is then initiated when the timeout completes, regardless of buffer size. If a new row enters the buffer after this the cycle repeats. This is an enhanced version of Interval flush that maximizes the amount of data written in a single flush.
 
 This is an open souce project. Go ahead if you feel obliged.
  
