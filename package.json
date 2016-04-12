@@ -1,6 +1,7 @@
 {
   "name": "buffered-csv",
-  "version": "0.2.0",
+  "version": "1.0.0",
+  "license": "ISC",
   "description": "Generate csv files with buffered output.",
   "main": "index.js",
   "keywords": [
@@ -8,20 +9,20 @@
     "buffered",
     "interval"
   ],
-  "author": {
-    "name": "Joost Brugman",
-    "email": "joost@brugmanholding.com"
-  },
-  "bugs": {
-    "url": "https://github.com/brugmanjoost/buffered-csv/issues"
-  },
-  "repository: {
+  "author": "Joost Brugman <joost@brugmanholding.com>",
+  "contributors": [
+  	"Joost Brugman <joost@brugmanholding.com>"
+  ],
+  "homepage": "https://github.com/brugmanjoost/buffered-csv",
+  "bugs": "https://github.com/brugmanjoost/buffered-csv/issues",
+  "repository": {
     "type": "git",
     "url": "https://github.com/brugmanjoost/buffered-csv.git"
   },
-  "license": "ISC",
-  "readme": "ERROR: No README data found!",
-  "_id": "buffered-csv@0.2.0",
+  "dependencies": {
+    "private-parts": "^0.4.1"
+  },
+  "_id": "buffered-csv@1.0.0",
   "_shasum": "1d5459d2feadd10df9993ee7bf1098b79d5dbe54",
   "_from": "buffered-csv@latest"
 }

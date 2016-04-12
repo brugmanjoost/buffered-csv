@@ -1,3 +1,3 @@
 module.exports = {
-	File: require('./code/File.js')
+	File: require('./lib/File.js')
 }
