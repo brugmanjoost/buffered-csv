@@ -94,7 +94,7 @@ If chosen to write headers, then headers are written to each file. Buffered-csv 
 The following is a full list of all options that may be passed to the constructor:
 
 |Option             |Default       |Description                                                                                                                                                                     |
-|-------------------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:------------------|:-------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |**encoding**       |'utf-8'.      |Character encoding for the output file.                                                                                                                                         |
 |**delimeter**      |','           |The character used to seperate values on a single line.                                                                                                                         |
 |**quote**          |'"'           |The character used to enclose quoted values.                                                                                                                                    |
@@ -117,7 +117,7 @@ buffered-csv tracks field order and field typing across all writes and all files
 ## Autodetect
 If data is added as a key/value map previously unknown fields will automatically be detected and assumed to be quoted. This works well for many simple csv scenario's but there are drawbacks:
 
-In our [minimal usage](#minimal) example a Birthyear...
+In our [minimal usage](#minimal) example a *Birthyear*...
 * ... is not specified for Albert Einstein. His csv line will have two fields.
 * ... is specified for Galileo Galilei. His csv line will have three fields.
 * ... is not specified for Shen Kuo. His csv line will have three fields with a *nullValue* for *Birthyear.*
@@ -126,7 +126,7 @@ Without buffering data for Albert Einstein is sent to file immediately, which re
 
 In our [buffering output](#buffering-output) example data is only sent to file after Galileo Galilei has been added to the buffer. As a consequence...
 * ... the header line will include the *Birthyear* field.
-* ... Albert Einstein's csv line will have  three fields with a nullValue for Birthyear.
+* ... Albert Einstein's csv line will have  three fields with a nullValue for *Birthyear*.
 
 With dynamic filenames field information is maintained across all files. If during the 5th write on the 3rd file a field is added, it will show up in the headers of the 6th file and any subsequent files. It will not show in the headers of files 1 through 2. It will also not show in the headers of file 3 (it would have to be detected on the 1st write of file 3).
 
