@@ -11,7 +11,7 @@
   ],
   "author": "Joost Brugman <joost@brugmanholding.com>",
   "contributors": [
-  	"Joost Brugman <joost@brugmanholding.com>"
+    "Joost Brugman <joost@brugmanholding.com>"
   ],
   "homepage": "https://github.com/brugmanjoost/buffered-csv",
   "bugs": "https://github.com/brugmanjoost/buffered-csv/issues",
