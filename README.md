@@ -50,7 +50,7 @@ file.add({
 file.add({
     Name: 'Galileo Galilei',
     Expertise: 'Gravity',
-    Birthyear: 154
+    Birthyear: 1564
 });
 file.add({
     Name: 'Shen Kuo',
@@ -137,7 +137,7 @@ Prior specification of fields solves the drawbacks of autodetect at the expense 
 
 ```javascript
 var file = new csv.File({
-    path: 'celebrities.csv'
+    path: 'celebrities.csv',
     fields: {
         Expertise: {
             type: 'string'
