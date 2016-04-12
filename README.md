@@ -98,15 +98,15 @@ The following is a full list of all options that may be passed to the constructo
 |-------------------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |**encoding**       |'utf-8'.      |Character encoding for the output file.                                                                                                                                         |
 |**delimeter**      |','           |The character used to seperate values on a single line.                                                                                                                         |
-|**quote**          |'"'           |The character used to enclose string values.                                                                                                                                    |
-|**escape**         |'\\'          |The escape character to use if the quote character is present in a string value.                                                                                                |
+|**quote**          |'"'           |The character used to enclose quoted values.                                                                                                                                    |
+|**escape**         |'\\'          |The escape character to use if the quote character is present in a quoted value.                                                                                                |
 |**nullValue**      |'NULL'        |A string to insert for fields that have an *undefined* value. This string is inserted verbatim in the csv output without any quoting or escaping.                               |
 |**eol**            |System default|A string to designate the end of line. Typically '\n' or '\r\n'.                                                                                                                |
 |**headers**        |true          |True if the first line of each output file must contain header information. False otherwise.                                                                                    |
 |**overwrite**      |true          |True if the output files must be overwritten upon the first write to that file. If dynamic filenames are used each file will be overwritten upon the first write to that file.  |
 |**flushInterval**  |0 (disabled)  |The contents of the csv buffer are written to file after each specified interval in milliseconds. Ignored if 0. *                                                               |
 |**flushLines**     |0 (disabled)  |The contents of the csv buffer are written to file as soon as the buffer contains the specified number of lines. Ignored if 0. *                                                |
-|**fields**         |{}            |A specification of fields and how to handle them, in the following format: { &lt;name&gt;: { type: 'string'\|'number' } }
+|**fields**         |{}            |A specification of fields and how to handle them, in the following format: { &lt;name&gt;: { type: 'quoted'\|'unquoted' } }
 
 
 **Note:** If both *flushInterval* and *flushLines* are 0 buffered-csv operates in classic mode. Lines are written to file immediately when added.
@@ -116,7 +116,7 @@ The following is a full list of all options that may be passed to the constructo
 buffered-csv tracks field order and field typing across all writes and all files. If data is added as an array buffered-csv will always assume all entries in the array match up with any previously established field order. If data is added as a key/value map then buffered-csv will ensure fields will always be sent to file in the same order.
 
 ## Autodetect
-If data is added as a key/value map previously unknown fields will automatically be detected and assumed to be string (quoted) types. This works well for many simple csv scenario's but there are drawbacks:
+If data is added as a key/value map previously unknown fields will automatically be detected and assumed to be quoted types. This works well for many simple csv scenario's but there are drawbacks:
 
 In our [minimal usage](#minimal) example a Birthyear...
 * ... is not specified for Albert Einstein. His csv line will have two fields.
@@ -140,19 +140,19 @@ var file = new csv.File({
     path: 'celebrities.csv',
     fields: {
         Expertise: {
-            type: 'string'
+            type: 'quoted'
         },
         Name: {
-            type: 'string'
+            type: 'quoted'
         },
         Birthyear: {
-            type: 'number'
+            type: 'unquoted'
         }
     }
 });
 ```
 
-In this case *Birthyear* will show up in all headerlines in all files. Additionally this method specifies the field type, currently either 'string' (quoted) or 'number' (non-quoted). Finally, this also sets the field order so that *Expertise* will be the first field listed on each line.
+In this case *Birthyear* will show up in all headerlines in all files. Additionally this method specifies the field type, currently either 'quoted' or 'unquoted'. Finally, this also sets the field order so that *Expertise* will be the first field listed on each line.
 
 Using pior specification does not disable autodetect and does not enable an error mechanism if unkown field names are added.
 
@@ -195,7 +195,6 @@ Explicitly flushes the buffer to file.
 ## To do
 There are some items left to enhance buffered-csv, namely:
 
- - **Custom field support:** buffered-csv internally supports fields of any type through a mapping called *convertors*. Currently *string* and *number* are the only ones implemented where string is quoted and number is not. It would be chique to expose an API to allow adding custom items to this list, e.g. to convert a *Date* object to a YYYY-MM-DD representation.
  - **Timeout flush:** Initiate a timeout once the first row enters the buffer. A flush is then initiated when the timeout completes, regardless of buffer size. If a new row enters the buffer after this the cycle repeats. This is an enhanced version of Interval flush that maximizes the amount of data written in a single flush.
 
 This is an open souce project. Go ahead if you feel obliged.
