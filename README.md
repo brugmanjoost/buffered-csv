@@ -17,7 +17,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;5.1.3 [file.add(data)](#fileadddata)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;5.1.4 [file.complete()](#filecomplete)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;5.1.5 [file.flush()](#fileflush)<br />
-6. [To do](#to-do)
 
 ## Introduction
 Generation of csv files often involves appending the generated csv file line by line as the data is generated. Some use cases benefit from storing the data in memory until a threshold is reached upon which all lines in memory are appended to the file at once. This module does just that:
@@ -106,7 +105,7 @@ The following is a full list of all options that may be passed to the constructo
 |**overwrite**      |true          |True if the output files must be overwritten upon the first write to that file. If dynamic filenames are used each file will be overwritten upon the first write to that file.  |
 |**flushInterval**  |0 (disabled)  |The contents of the csv buffer are written to file after each specified interval in milliseconds. Ignored if 0. *                                                               |
 |**flushLines**     |0 (disabled)  |The contents of the csv buffer are written to file as soon as the buffer contains the specified number of lines. Ignored if 0. *                                                |
-|**fields**         |{}            |A specification of fields and how to handle them, in the following format: { &lt;name&gt;: { type: 'quoted'\|'unquoted' } }
+|**fields**         |{}            |A specification of fields and how to handle them, in the following format: { &lt;name&gt;: { quoted: true | false } }
 
 
 **Note:** If both *flushInterval* and *flushLines* are 0 buffered-csv operates in classic mode. Lines are written to file immediately when added.
@@ -116,7 +115,7 @@ The following is a full list of all options that may be passed to the constructo
 buffered-csv tracks field order and field typing across all writes and all files. If data is added as an array buffered-csv will always assume all entries in the array match up with any previously established field order. If data is added as a key/value map then buffered-csv will ensure fields will always be sent to file in the same order.
 
 ## Autodetect
-If data is added as a key/value map previously unknown fields will automatically be detected and assumed to be quoted types. This works well for many simple csv scenario's but there are drawbacks:
+If data is added as a key/value map previously unknown fields will automatically be detected and assumed to be quoted. This works well for many simple csv scenario's but there are drawbacks:
 
 In our [minimal usage](#minimal) example a Birthyear...
 * ... is not specified for Albert Einstein. His csv line will have two fields.
@@ -140,19 +139,19 @@ var file = new csv.File({
     path: 'celebrities.csv',
     fields: {
         Expertise: {
-            type: 'quoted'
+            quoted: true
         },
         Name: {
-            type: 'quoted'
+            quoted: true
         },
         Birthyear: {
-            type: 'unquoted'
+            quoted: false
         }
     }
 });
 ```
 
-In this case *Birthyear* will show up in all headerlines in all files. Additionally this method specifies the field type, currently either 'quoted' or 'unquoted'. Finally, this also sets the field order so that *Expertise* will be the first field listed on each line.
+In this case *Birthyear* will show up in all headerlines in all files. Additionally this method specifies which fields are quoted. Finally, this also sets the field order so that *Expertise* will be the first field listed on each line.
 
 Using pior specification does not disable autodetect and does not enable an error mechanism if unkown field names are added.
 
@@ -192,10 +191,3 @@ Finishes generation of the csv file by flushing any remaining data in the buffer
 
 Explicitly flushes the buffer to file.
 
-## To do
-There are some items left to enhance buffered-csv, namely:
-
- - **Timeout flush:** Initiate a timeout once the first row enters the buffer. A flush is then initiated when the timeout completes, regardless of buffer size. If a new row enters the buffer after this the cycle repeats. This is an enhanced version of Interval flush that maximizes the amount of data written in a single flush.
-
-This is an open source project. Go ahead if you feel obliged.
- 
