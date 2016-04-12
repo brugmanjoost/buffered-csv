@@ -197,5 +197,5 @@ There are some items left to enhance buffered-csv, namely:
 
  - **Timeout flush:** Initiate a timeout once the first row enters the buffer. A flush is then initiated when the timeout completes, regardless of buffer size. If a new row enters the buffer after this the cycle repeats. This is an enhanced version of Interval flush that maximizes the amount of data written in a single flush.
 
-This is an open souce project. Go ahead if you feel obliged.
+This is an open source project. Go ahead if you feel obliged.
  
