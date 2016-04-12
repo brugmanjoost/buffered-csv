@@ -1,6 +1,6 @@
 {
   "name": "buffered-csv",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "ISC",
   "description": "Generate csv files with buffered output.",
   "main": "index.js",
@@ -22,7 +22,7 @@
   "dependencies": {
     "private-parts": "^0.4.1"
   },
-  "_id": "buffered-csv@1.0.0",
+  "_id": "buffered-csv@1.0.1",
   "_shasum": "1d5459d2feadd10df9993ee7bf1098b79d5dbe54",
   "_from": "buffered-csv@latest"
 }
