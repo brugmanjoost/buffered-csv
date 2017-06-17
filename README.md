@@ -105,7 +105,7 @@ The following is a full list of all options that may be passed to the constructo
 |**overwrite**      |true          |True if the output files must be overwritten upon the first write to that file. If dynamic filenames are used each file will be overwritten upon the first write to that file.  |
 |**flushInterval**  |0 (disabled)  |The contents of the csv buffer are written to file after each specified interval in milliseconds. Ignored if 0. *                                                               |
 |**flushLines**     |0 (disabled)  |The contents of the csv buffer are written to file as soon as the buffer contains the specified number of lines. Ignored if 0. *                                                |
-|**fields**         |{}            |A specification of fields and how to handle them, in the following format: { &lt;name&gt;: { quoted: true | false } }
+|**fields**         |{}            |A specification of fields and how to handle them, in the following format: { &lt;name&gt;: { quoted: true \| false } }
 
 
 **Note:** If both *flushInterval* and *flushLines* are 0 buffered-csv operates in classic mode. Lines are written to file immediately when added.
